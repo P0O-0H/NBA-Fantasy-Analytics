@@ -1,24 +1,14 @@
 from fastapi import APIRouter
+import pandas as pd 
+from ml_engine.predictor import get_recommendations
+from pathlib import Path
+
 
 router = APIRouter()
+BASE_DIR = Path(__file__).resolve().parents[1] 
+DATA_PATH = BASE_DIR / "data" / "processed" / "features.parquet"
 
 @router.get("/recommend")
 def recommend():
-    return [
-        {
-            "player_id": "123",
-            "name": "Dummy Player",
-            "avg_fp": 32.5,
-            "predicted_fp": 40.1,
-            "upside": 7.6,
-            "confidence": 0.75
-        },
-        {
-            "player_id": "456",
-            "name": "Another Player",
-            "avg_fp": 28.9,
-            "predicted_fp": 35.4,
-            "upside": 6.5,
-            "confidence": 0.68
-        }
-    ]
+    df = pd.read_parquet(DATA_PATH)
+    return get_recommendations(df)

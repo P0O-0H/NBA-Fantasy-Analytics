@@ -12,6 +12,7 @@ def main():
     df["rolling_FPoint_Last5"] = df.groupby("personId")["fantasyPoints"].rolling(window= 5).mean().reset_index(drop = True)
     df["rolling_FPoint_Last10"] = df.groupby("personId")["fantasyPoints"].rolling(window= 10).mean().reset_index(drop = True)
     df["rolling_Min_Last5"] = df.groupby("personId")["minutes"].rolling(window= 5).mean().reset_index(drop = True)
+    df["rolling_Min_Last10"] = df.groupby("personId")["minutes"].rolling(window= 10).mean().reset_index(drop = True)
     df["rolling_FPointsVol_Last3"] = df.groupby("personId")["minutes"].rolling(window= 3).std().reset_index(drop = True).fillna(0)
     df["rolling_FPointsVol_Last5"] = df.groupby("personId")["minutes"].rolling(window= 5).std().reset_index(drop = True).fillna(0)
 
