@@ -50,7 +50,7 @@ def get_recommendations(df, top_n = 10):
         results.append({
             "player_id": int(row["personId"]),
             "name": row["player_name"],
-            "team": row.get("teamAbbreviation"),
+            "team": row["teamName"],
             "score": round(score, 2),
             "recent_fp": round(recent_fp, 1),
             "upside": round(upside, 1),

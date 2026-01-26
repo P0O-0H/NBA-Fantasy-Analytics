@@ -15,6 +15,8 @@ def main():
     df["rolling_Min_Last10"] = df.groupby("personId")["minutes"].rolling(window= 10).mean().reset_index(drop = True)
     df["rolling_FPointsVol_Last3"] = df.groupby("personId")["minutes"].rolling(window= 3).std().reset_index(drop = True).fillna(0)
     df["rolling_FPointsVol_Last5"] = df.groupby("personId")["minutes"].rolling(window= 5).std().reset_index(drop = True).fillna(0)
+    df["teamName"] = df["playerteamCity"] + " " + df["playerteamName"]
+    df["opp_teamName"] = df["opponentteamCity"] + " " + df["opponentteamName"]
 
     if all(c in df.columns for c in ["fieldGoalsAttempted", "freeThrowsAttempted", "assists"]):
         df["usage_proxy"] = (
