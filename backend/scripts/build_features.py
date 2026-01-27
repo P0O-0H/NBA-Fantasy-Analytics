@@ -27,6 +27,8 @@ def main():
     else:
         df["usage_proxy"] = 0
     
+    df = df.rename(columns={ "personId": "player_id", "playerName": "name", "teamName": "team"})
+    
     DEST_PATH.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(DEST_PATH, index=False)
 

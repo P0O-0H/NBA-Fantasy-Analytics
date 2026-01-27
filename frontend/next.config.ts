@@ -1,9 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
   reactStrictMode: true,
-  // No turbo config needed
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.nba.com",
+      },
+      {
+        protocol: "https",
+        hostname: "a.espncdn.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

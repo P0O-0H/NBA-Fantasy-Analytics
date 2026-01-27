@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 
 type Player = {
   player_id: number;
@@ -18,73 +19,97 @@ export default function PickupCard({ player }: { player: Player }) {
     ? `https://a.espncdn.com/i/teamlogos/nba/500/${player.team}.png`
     : null;
 
-  return (
-    <div
-      onClick={() => setOpen(!open)}
-      className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition cursor-pointer"
-    >
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          {/* Team logo */}
-          {teamLogo ? (
-            <img
-              src={teamLogo}
-              alt={player.team ?? "Team"}
-              className="w-12 h-12 object-contain"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-          ) : (
-            <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
-              N/A
-            </div>
-          )}
+    const headshot = `https://cdn.nba.com/headshots/nba/latest/260x190/${player.player_id}.png`;
 
-          {/* Player info */}
+
+    return (
+      <div
+        onClick={() => setOpen(!open)}
+        className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition cursor-pointer"
+      >
+        {/* ================= Header ================= */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            
+            {/* Player Headshot */}
+            <Image
+            src={`https://cdn.nba.com/headshots/nba/latest/260x190/${player.player_id}.png`}
+            alt={player.name}
+            width={56}
+            height={56}
+            unoptimized
+            className="rounded-full object-cover border bg-gray-200"
+          />
+  
+            {/* Player Info */}
+            <div>
+              <h2 className="text-lg font-semibold">{player.name}</h2>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                {teamLogo && (
+                  <img
+                    src={teamLogo}
+                    alt={player.team ?? "Team"}
+                    className="w-5 h-5 object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = "/player-placeholder.png";
+                    }}
+                  />
+                )}
+                <span>{player.team ?? "Unknown team"}</span>
+              </div>
+            </div>
+          </div>
+  
+          {/* Recommendation Score */}
+          <span className="text-purple-600 font-bold text-xl">
+            {Number.isFinite(player.score) ? player.score.toFixed(1) : "—"}
+          </span>
+        </div>
+  
+        {/* ================= Metrics ================= */}
+        <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
           <div>
-            <h2 className="text-lg font-semibold">{player.name}</h2>
-            <p className="text-sm text-gray-500">
-              {player.team ?? "Unknown team"}
+            <p className="text-gray-400">Recent FP</p>
+            <p className="font-semibold">
+              {Number.isFinite(player.recent_fp)
+                ? player.recent_fp!.toFixed(1)
+                : "—"}
+            </p>
+          </div>
+  
+          <div>
+            <p className="text-gray-400">Minutes</p>
+            <p className="font-semibold">
+              {Number.isFinite(player.minutes_trend)
+                ? player.minutes_trend!.toFixed(1)
+                : "—"}
+            </p>
+          </div>
+  
+          <div>
+            <p className="text-gray-400">Upside</p>
+            <p
+              className={`font-semibold ${
+                Number.isFinite(player.upside) && player.upside! > 0
+                  ? "text-green-600"
+                  : "text-gray-500"
+              }`}
+            >
+              {Number.isFinite(player.upside)
+                ? `+${player.upside!.toFixed(1)}`
+                : "—"}
             </p>
           </div>
         </div>
-
-        {/* Recommendation score */}
-        <span className="text-purple-600 font-bold text-xl">
-          {player.score.toFixed(1)}
-        </span>
+  
+        {/* ================= Expandable Explanation ================= */}
+        {open && (
+          <div className="mt-4 text-sm text-gray-600 border-t pt-3 space-y-1">
+            <p>📈 Recent fantasy production vs baseline</p>
+            <p>⏱ Minutes trend reflects role stability</p>
+            <p>🎯 Upside captures volatility + opportunity</p>
+          </div>
+        )}
       </div>
-
-      {/* Metrics row */}
-      <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
-        <div>
-          <p className="text-gray-400">Recent FP</p>
-          <p className="font-semibold">{player.recent_fp !== undefined ? player.recent_fp.toFixed(1) : "—"}</p>
-        </div>
-
-        <div>
-          <p className="text-gray-400">Minutes</p>
-          <p className="font-semibold">{player.minutes_trend !== undefined ? player.minutes_trend.toFixed(1): "—"}</p>
-        </div>
-
-        <div>
-          <p className="text-gray-400">Upside</p>
-          <p className="font-semibold text-green-600">
-            +{player.upside?.toFixed(1) ?? "—"}
-          </p>
-        </div>
-      </div>
-
-      {/* Expandable explanation */}
-      {open && (
-        <div className="mt-4 text-sm text-gray-600 border-t pt-3 space-y-1">
-          <p>📈 Recent fantasy form above baseline</p>
-          <p>⏱ Minutes trend supports role stability</p>
-          <p>🎯 Upside captures volatility + opportunity</p>
-        </div>
-      )}
-    </div>
-  );
-}
+    );
+  }
