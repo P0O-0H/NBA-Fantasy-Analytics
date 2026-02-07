@@ -10,6 +10,8 @@ df["target_fp_next"] = (
 
 ml_df = df.dropna(subset=["target_fp_next"])
 
+df = df[df["minutes"] > 4]
+
 features = [
     "rolling_FPoint_Last10",
     "rolling_Min_Last10",

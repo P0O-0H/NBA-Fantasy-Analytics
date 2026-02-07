@@ -10,5 +10,6 @@ mask = y_pred.notna()
 y_real = y_real[mask]
 y_pred = y_pred[mask]
 
-mae = mean_absolute_error(y_real, y_pred)
-print("Baseline MAE (rolling last 10):", mae)
+mean_abs_err = mean_absolute_error(y_real, y_pred)
+print(f"Baseline MAE (rolling last 10): {mean_abs_err:.5f}")
+print(f"Evaluated on {len(y_real)} samples")
