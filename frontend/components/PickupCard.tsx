@@ -9,6 +9,9 @@ type Player = {
   recent_fp: number;
   minutes_trend: number;
   upside: number;
+  form_score: number;
+  minute_score: number;
+  usage_score: number;
 };
 
 export default function PickupCard({ player }: { player: Player }) {
@@ -105,9 +108,9 @@ export default function PickupCard({ player }: { player: Player }) {
         {/* ================= Expandable Explanation ================= */}
         {open && (
           <div className="mt-4 text-sm text-gray-600 border-t pt-3 space-y-1">
-            <p>📈 Recent fantasy production vs baseline</p>
-            <p>⏱ Minutes trend reflects role stability</p>
-            <p>🎯 Upside captures volatility + opportunity</p>
+            <p>📈 Form signal: {player.form_score.toFixed(1)}</p>
+            <p>⏱ Minutes signal: {player.minute_score.toFixed(1)}</p>
+            <p>🔥 Usage signal: {player.usage_score.toFixed(1)}</p>
           </div>
         )}
       </div>

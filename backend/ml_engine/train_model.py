@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
@@ -7,7 +8,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
-DATA_PATH = "data/processed/features.parquet"
+DATA_PATH = "backend/data/processed/features.parquet"
 TARGET = "fantasyPoints"
 RANDOM_STATE = 67
 
@@ -42,16 +43,20 @@ y_train = train_df[TARGET]
 X_test = test_df[FEATURES]
 y_test = test_df[TARGET]
 
-pipeline = Pipeline(
+model = Pipeline(
     steps=[
         ("scaler", StandardScaler()),
         ("model", Ridge(alpha=1.0))
     ]
 )
 
-pipeline.fit(X_train, y_train)
+model.fit(X_train, y_train)
 
-y_pred = pipeline.predict(X_test)
+y_pred = model.predict(X_test)
+
+joblib.dump(model,  "backend/ml_engine/models/ridge_model.joblib")
+
+print("Model saved to backend/ml_engine/models/ridge_model.joblib")
 
 mae = mean_absolute_error(y_test, y_pred)
 #rmse = mean_absolute_error(y_test, y_pred, squared=False)
@@ -62,7 +67,7 @@ print(f"MAE  : {mae:.2f}")
 
 coef_df = pd.DataFrame({
     "feature": FEATURES,
-    "coefficient": pipeline.named_steps["model"].coef_
+    "coefficient": model.named_steps["model"].coef_
 }).sort_values("coefficient", ascending=False)
 
 print("\nFeature importance (Ridge coefficients)")
